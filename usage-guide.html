@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<!-- <meta charset="utf-8"/> -->
+		<title>Editable ng-grid API &amp; Usage Guide</title>
+		<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <style>
+            li {
+                margin-top: 5px;
+            }
+            table {
+                border-width: 1px 0px 0px 1px;
+                border-style: solid;
+                border-color: #888;
+                width: 100%;
+                border-spacing: 0px;
+                border-collapse: separate;
+            }
+            table tr {
+                width: 100%;
+            }
+            td, th {
+                border-width: 0 1px 1px 0;
+                border-style: solid;
+                border-color: #888;
+                padding: 10px
+            }
+        </style>
+	</head>
+	
+	<body style="font-family: Helvetica, Arial, sans-serif; margin: 30px">
+		<div class="margin: 0px auto">
+            <h1>Editable ng-grid API &amp; Usage Guide</h1>
+            <p>An AngularJS component to include an editable datagrid on a webpage. Uses ng-grid as the core solution to generate grid structure.</p>
+
+            <h3>Dependencies</h3>
+            <ul>
+                <li><em>ngGrid Library</em> - JS and CSS files <u>included</u> in the package</li>
+                <li><em>ngGridFlexibleHeightPlugin</em> - ngGrid Plugin to generate a flexible-height grid. <u>Included</u> in the package</li>
+                <li><em>ngGridSingleSelectionPlugin</em> - ngGrid Plugin for Single Row Selection when not clicking on Row Checkbox. <u>Included</u> in the package</li>
+                <li><em>ui.bootstrap</em> - Required to generate modal popups. <u>Not Included</u> in the package</li>
+                <li><em>toastr</em> - Required to handle notification messages. <u>Not Included</u> in the package</li>
+            </ul>
+
+            <h3>Usage</h3>
+            <ol>
+                <li>Include all the dependencies into your HTML document (JS and CSS files for the dependencies mentioned above).
+                <li>Include <strong>crudNgGrid.js</strong> file into your HTML document.
+                <li>Inject <strong>crudNgGrid</strong> dependency into your AngularJS module definition. For example:
+                    <blockquote>
+                        <pre>
+                        	app.module('testApp', ['crudNgGrid'])
+                        </pre>
+                    </blockquote>
+                </li>
+                <li>Create a configuration object in the parent controller of the page, where you want to render the grid. For example:
+                	<blockquote>
+                        <pre>
+                        	                        $scope.gridConfig = {
+							    sourceUrl: 'get-grid-data',
+							    requestParams: {
+							    	'id': 50,
+							    	'value': 600
+							    },
+							    columnDefs: [
+							    	{field:'id', displayName:'ID'},
+							        {field:'value', displayName:'Value'}
+							    ],
+							    gridId: 'sampleGridId',
+							    gridButtonsId: 'sampleGridButtonsId',
+							    enableEditDelete: true,
+							    enableMultipleDelete: true,
+							    enableRowAddition: true,
+							    enablePagination: true,
+							    pagingOptions: {
+							        pageSizes: [10, 20],
+							        pageSize: 10,
+							        totalServerItems: 0,
+							        currentPage: 1
+							    },
+							    deleteConfig: {
+							    	url: 'delete-grid-data'
+							    },
+							    addConfig: {
+							    	url: 'add-grid-data'
+								},
+							    editConfig: {
+							        url: 'update-grid-data'
+							    }
+							};
+
+                        </pre>
+                    </blockquote>
+                </li>
+                <li>Include the <strong>editable-ng-grid</strong> directive in the HTML file, under the scope of the controller. For example:-
+                	<blockquote>
+                        <pre>
+                        	&lt;div editable-ng-grid grid-config="gridConfig"&gt;</div>
+                        </pre>
+                    </blockquote>
+                </li>
+            </ol>
+
+            <h3>Configuration Parameters</h3> 
+            	<table>
+            		<thead>
+            			<tr>
+            				<th>Parameter</th>
+            				<th>Description</th>
+            				<th>Required?</th>
+            				<th>Dependency on another param</th>
+            			</tr>
+            		</thead>
+
+            		<tbody>
+            			<tr>
+            				<td>sourceUrl</td>
+            				<td>Source URL to fetch the data for the grid. JSON data expected in the form of List of Objects.</td>
+            				<td>Yes</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>requestParams</td>
+            				<td>HTTP GET Request parameters, passed along with the Source URL.</td>
+            				<td>Yes, but could be an empty object.</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>columnDefs</td>
+            				<td>Grid Columns and its properties. Please refer to the API documentation: <a href="http://angular-ui.github.io/ng-grid/">http://angular-ui.github.io/ng-grid/</a></td>
+            				<td>Yes</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>gridId</td>
+            				<td>Unique HTML Element ID for the Grid container.</td>
+            				<td>Yes</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>gridButtonsId</td>
+            				<td>Unique HTML Element ID for the Grid Buttons container (Add New, Delete Multiple)</td>
+            				<td>Yes</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>enableEditDelete</td>
+            				<td>true/false - If you want to allow update or delete operations on grid rows.</td>
+            				<td>Yes</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>enableMultipleDelete</td>
+            				<td>true/false - If you want to allow multiple deletion of rows.</td>
+            				<td>Yes</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>enableRowAddition</td>
+            				<td>true/false - If you want to allow addition of new rows to the grid.</td>
+            				<td>Yes</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>enablePagination</td>
+            				<td>true/false - If you want to client-side pagination on the grid data</td>
+            				<td>Yes</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>pagingOptions</td>
+            				<td>Pagination configuration details (page size, default page, etc). Please refer to the API documentation: <a href="http://angular-ui.github.io/ng-grid/">http://angular-ui.github.io/ng-grid/</a>. Default:
+            					<blockquote>
+            						<pre>
+{
+    pageSizes: [25, 50, 100],
+    pageSize: 25,
+    totalServerItems: 0,
+    currentPage: 1
+}
+            						</pre>
+            					</blockquote>
+
+            				</td>
+            				<td>No</td>
+            				<td>enablePagination</td>
+            			</tr>
+            			<tr>
+            				<td>deleteConfig.url</td>
+            				<td>Request URL for the Delete operation. List of selected objects would be sent to the server, as Request Body (POST).</td>
+            				<td>Yes</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>addConfig.url</td>
+            				<td>Request URL for the Add operation. A JSON object would be sent to the server, as Request Body (POST).</td>
+            				<td>Yes</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>addConfig.customTempl</td>
+            				<td>Path to the Custom Template for the Add form, in case if user wishes to use external template, instead of the default one. Refer to the next section for sample design.</td>
+            				<td>No</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>addConfig.modalCtrl</td>
+            				<td>Modal Controller for the above specified custom template. Refer to the next section for the sample design.</td>
+            				<td>No</td>
+            				<td>addConfig.customTempl </td>
+            			</tr>
+            			<tr>
+            				<td>addConfig.afterSubmit</td>
+            				<td>Callback function to be executed upon Submit action from the Modal pop-up. Refer to the next section for sample design</td>
+            				<td>No</td>
+            				<td>addConfig.customTempl </td>
+            			</tr>
+            			<tr>
+            				<td>editConfig.url</td>
+            				<td>Request URL for the Edit operation. A JSON object would be sent to the server, as Request Body (POST).</td>
+            				<td>Yes</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>editConfig.customTempl</td>
+            				<td>Path to the Custom Template for the Edit form, in case if user wishes to use external template, instead of the default one. Refer to the next section for sample design.</td>
+            				<td>No</td>
+            				<td> - </td>
+            			</tr>
+            			<tr>
+            				<td>editConfig.modalCtrl</td>
+            				<td>Modal Controller for the above specified custom template. Refer to the next section for the sample design.</td>
+            				<td>No</td>
+            				<td>editConfig.customTempl </td>
+            			</tr>
+            			<tr>
+            				<td>editConfig.afterSubmit</td>
+            				<td>Callback function to be executed upon Submit action from the Modal pop-up. Refer to the next section for sample design</td>
+            				<td>No</td>
+            				<td>editConfig.customTempl </td>
+            			</tr>
+            		</tbody>
+            	</table>
+
+            <h3>Sample Configuration for External Add/Update Form</h3> 
+
+            <h5>Modal HTML Template (templates/add-modal.html)</h5>
+            <pre>
+            	&lt;div class="modal-header"&gt;
+                   &lt;h3 class='modal-title'&gt;Add New Record&lt;/h3&gt;
+                &lt;/div&gt;
+                &lt;div class="modal-body"&gt;
+                   	&lt;div class='row'>
+                   	  	&lt;div class="col-md-6"&gt;
+                   	  		&lt;label&gt;ID:&lt;/label&gt;
+                   	  	&lt;/div&gt;
+                   	  	&lt;div class="col-md-6"&gt;
+                   	  		&lt;input type="text" name="id" ng-model="id"/&gt;
+                   	  	&lt;/div&gt;
+                   	&lt;/div&gt;
+
+                   	&lt;div class='row'&gt;
+                   	  	&lt;div class="col-md-6"&gt;
+                   	  		&lt;label&gt;Value: &lt;/label&gt;
+                   	  	&lt;/div&gt;
+                   	  	&lt;div class="col-md-6"&gt;
+                   	  		&lt;input type="text" name="value" ng-model="value"/&gt;
+                   	  	&lt;/div&gt;
+                   	&lt;/div&gt;
+
+                &lt;/div&gt;
+                &lt;div class="modal-footer"&gt;
+                   &lt;button class="btn btn-primary" ng-click="ok()"&gt;Submit&lt;/button&gt;
+                   &lt;button class="btn btn-danger" ng-click="cancel()"&gt;Cancel&lt;/button&gt;
+                &lt;/div&gt;
+            </pre>
+    
+            <h5>Configuration Properties</h5>
+            <pre>
+{
+    addConfig: {
+        url: 'add-grid-data',
+        customTempl: 'templates/add-modal.html',
+        modalCtrl: function ($scope, $modalInstance, gridConfig, selectedItems) {
+            
+            /**
+             * Submit Action handler
+             */
+            $scope.ok = function () {
+                
+                //Bind Updated data to the gridConfig object.
+                
+                $modalInstance.close($scope.gridConfig);
+            };
+
+            /** 
+             * Cancel Action handler
+             */
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        }, 
+        afterSubmit: function (updConfigObj) {
+            if(updConfigObj != undefined) {
+                
+                //Retrieve updated data from updConfigObj, and make HTTP Requests to persist changes
+              
+            }
+        }
+	}
+}
+                   
+            </pre>
+        </div>
+ 
+	</body>
+</html>
